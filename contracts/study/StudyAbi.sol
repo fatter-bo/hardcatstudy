@@ -26,8 +26,8 @@ contract StudyAbi {
         return abi.encode(x); // 计算1的ABI编码
     }
 
-    function testUint(uint8 _num1, uint32 _num2,uint8 _num3, uint32 _num4,uint8 _num5, uint32 _num6) 
-        public
+    function testUint(uint8 _num1, uint32 _num2) 
+    public
         pure
         returns (bytes memory, bytes memory)
     {
