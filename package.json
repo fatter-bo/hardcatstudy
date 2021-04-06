@@ -1,0 +1,48 @@
+{
+  "name": "basiscash-protocol",
+  "version": "0.1.0",
+  "description": "A lightweight implementation of the Basis Protocol on Ethereum",
+  "repository": "https://github.com/Basis-Cash/basiscash-protocol",
+  "license": "MIT",
+  "scripts": {
+    "dev": "hardhat node",
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "coverage": "hardhat coverage",
+    "docker": "docker build -t bc-v2 . && docker run -it --rm bc-v2",
+    "deploy:rinkeby": "yarn docker npx hardhat run ./scripts/deploy.ts --network rinkeby",
+    "deploy:mainnet": "yarn docker npx hardhat run ./scripts/deploy.ts --network mainnet"
+  },
+  "devDependencies": {
+    "@ethersproject/address": "^5.0.10",
+    "@ethersproject/contracts": "^5.0.10",
+    "@ethersproject/networks": "^5.0.8",
+    "@ethersproject/providers": "^5.0.21",
+    "@ethersproject/solidity": "^5.0.9",
+    "@nomiclabs/hardhat-ethers": "^2.0.1",
+    "@nomiclabs/hardhat-etherscan": "^2.1.1",
+    "@types/chai": "^4.2.14",
+    "@types/ethereumjs-util": "^6.1.0",
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^14.14.25",
+    "chai": "^4.3.0",
+    "ethereum-waffle": "^3.2.2",
+    "ethereumjs-util": "^7.0.8",
+    "ethers": "^5.0.29",
+    "ganache-cli": "^6.12.2",
+    "hardhat": "^2.0.8",
+    "hardhat-gas-reporter": "^1.0.4",
+    "mocha": "^8.2.1",
+    "prettier": "^2.2.1",
+    "solc": "^0.7.6",
+    "solidity-coverage": "^0.7.14",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.4.0",
+    "@uniswap/sdk": "^3.0.3",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0"
+  }
+}
