@@ -12,4 +12,9 @@ truffle-config.js
 
 *.log
 !deployments/*.log
+*~
+*.swp
+
+typechain
+yarn.lock
 
