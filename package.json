@@ -5,7 +5,6 @@
   "repository": "https://github.com/Basis-Cash/basiscash-protocol",
   "license": "MIT",
   "scripts": {
-    "preCommit": "lint-staged",
     "prettier:solidity": "./node_modules/.bin/prettier contracts/",
     "dev": "hardhat node",
     "test": "hardhat test",
@@ -13,12 +12,16 @@
     "coverage": "hardhat coverage",
     "docker": "docker build -t bc-v2 . && docker run -it --rm bc-v2",
     "deploy:rinkeby": "yarn docker npx hardhat run ./scripts/deploy.ts --network rinkeby",
-    "deploy:mainnet": "yarn docker npx hardhat run ./scripts/deploy.ts --network mainnet"
+    "deploy:mainnet": "yarn docker npx hardhat run ./scripts/deploy.ts --network mainnet",
+    "prepare": "husky install"
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "echo $HUSKY_GIT_PARAMS"
-    }
+  "lint-staged": {
+    "script/*.ts": [
+      "tslint --project . --format stylish"
+    ],
+    "src/**/*.{css,scss}": [
+      "stylelint --config src/stylelint.config.json"
+    ]
   },
   "devDependencies": {
     "@ethersproject/address": "^5.0.10",
@@ -52,6 +55,7 @@
     "solidity-coverage": "^0.7.14",
     "ts-generator": "^0.1.1",
     "ts-node": "^9.1.1",
+    "tslint": "^6.1.3",
     "typechain": "^4.0.3",
     "typescript": "^4.1.3"
   },
