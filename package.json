@@ -17,7 +17,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test",
+      "pre-commit": "npx hardhat run scripts/StudyAbi.ts",
       "pre-push": "npm test",
       "pre-commit": "npm run prettier:solidity",
       "pre-commit": "npm run preCommit"
