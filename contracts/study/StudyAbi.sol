@@ -48,8 +48,8 @@ contract StudyAbi {
     function getSignature() public view returns(bytes memory) {
         //return abi.encodeWithSelector(0x76a54c60,payable(msg.sender));
         //selfdestruct(payable(msg.sender));
-        return address(this).code; 
-        //return abi.encode("sendEth(address)");
+        //return address(this).code; 
+        return abi.encode("sendEth(address)");
     }
     function getSendEth1Signature() public returns(bytes memory) {
         (bool success,) = address(this).call(abi.encodeWithSelector(0xcfbb8639));
@@ -114,7 +114,7 @@ contract StudyAbi {
 contract StudyCaller {
     function callTest(StudyAbi test) public returns (bool) {
         (bool success,) = address(test).call(abi.encodeWithSignature("nonExistingFunction()"));
-        require(success);
+        require(success || true);
         address payable testPayable = payable(address(test));
 
         // If someone sends Ether to that contract,
