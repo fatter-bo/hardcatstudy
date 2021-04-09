@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.3;
+pragma solidity >=0.7.6 <0.9.0;
 
 import "../utils/Address.sol";
 
@@ -45,7 +45,7 @@ contract StudyAbi {
          datalen = retdata.length;
         return (retdata.length,abi.decode(retdata,(bool)));
     }
-    function getSignature() public view returns(bytes memory) {
+    function getSignature() public pure returns(bytes memory) {
         //return abi.encodeWithSelector(0x76a54c60,payable(msg.sender));
         //selfdestruct(payable(msg.sender));
         //return address(this).code; 

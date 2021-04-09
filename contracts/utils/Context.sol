@@ -1,16 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity >=0.7.6 <0.9.0;
 
 /*
- * @dev Provides information about the current execution context, including the
- * sender of the transaction and its data. While these are generally available
- * via msg.sender and msg.data, they should not be accessed in such a direct
- * manner, since when dealing with GSN meta-transactions the account sending and
- * paying for execution may not be the actual sender (as far as an application
- * is concerned).
+ * @dev 返回msg数据的基类
  *
- * This contract is only required for intermediate, library-like contracts.
+ * 不能构造,只能被继承
  */
 abstract contract Context {
     function _msgSender() internal view virtual returns (address) {
