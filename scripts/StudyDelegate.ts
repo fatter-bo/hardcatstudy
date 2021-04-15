@@ -25,6 +25,9 @@ let main = async () => {
     console.log('instanceInc.x:', await instanceInc.x(), await instanceInc.y());
     console.log('instance.encode:', await instance.encode());
     console.log('instance.keccak:', await instance.keccak());
+    console.log('xxxxxxxxxxxxxxxxxxxxxx:', (await instanceInc.x()).toString(), (await instance.y()).toString());
+    await instance.functionCall(instanceInc.address,"errerr");
+    console.log('xxxxxxxxxxxxxxxxxxxxxx:', (await instanceInc.x()).toString(), (await instance.y()).toString());
 };
 
 main();

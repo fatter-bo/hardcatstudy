@@ -1,15 +1,18 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.3;
+pragma solidity >=0.7.6 <0.9.0;
 
 import "../utils/Address.sol";
 
 contract StudyInc {
+    using Address for address;
     uint public x;
     uint public y;
     address public owner;
     constructor(){
         owner = msg.sender;
+    }
+    fallback() external{
     }
     function inc(uint i)public {
        x = i; 
@@ -37,8 +40,15 @@ contract StudyInc {
 }
 
 contract StudyDelegate {
+    using Address for address;
     uint public x;
     uint public y;
+
+    function functionCall(address addr,string memory errorMessage) public {
+        x++;
+        y=2*x;
+        addr.functionCall(abi.encodeWithSelector(bytes4(keccak256("inc1(uint256)")),11 ether),errorMessage);
+    }
     function faucet(address addr) public returns(address){
         if(true){
             (,bytes memory retdata) = addr.staticcall(abi.encodeWithSelector(bytes4(keccak256("faucet(uint256)")),1.1 ether));

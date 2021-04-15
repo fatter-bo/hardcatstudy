@@ -150,7 +150,7 @@ contract ERC20 is Context, IERC20 {
 
         totalSupply = totalSupply.add(amount);
         _balances[to] = _balances[to].add(amount);
-        //emit Transfer(address(0), to, amount);
+        emit Transfer(address(0), to, amount);
     }
     modifier ValidAddress(address addr){
         require(addr != address(0), "ERC20: mint to the zero address");
