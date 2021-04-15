@@ -13,6 +13,7 @@
     "docker": "docker build -t bc-v2 . && docker run -it --rm bc-v2",
     "deploy:rinkeby": "yarn docker npx hardhat run ./scripts/deploy.ts --network rinkeby",
     "deploy:mainnet": "yarn docker npx hardhat run ./scripts/deploy.ts --network mainnet",
+    "deploy:ganache": "yarn docker npx hardhat run ./scripts/deploy.ts --network ganache",
     "prepare": "husky install"
   },
   "lint-staged": {
