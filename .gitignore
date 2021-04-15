@@ -3,6 +3,7 @@
 .env
 node_modules/
 src/types
+generated
 
 build/
 bin/
