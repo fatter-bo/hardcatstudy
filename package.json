@@ -1,10 +1,19 @@
 {
   "name": "basiscash-protocol",
   "version": "0.1.0",
-  "description": "A lightweight implementation of the Basis Protocol on Ethereum",
-  "repository": "https://github.com/Basis-Cash/basiscash-protocol",
+  "description": "A hardhat + thegraph example",
+  "repository": "https://github.com/fatter-bo/hardcatstudy",
   "license": "MIT",
   "scripts": {
+    "graph:build-contract": "solc contracts/ConfigAddress.sol --abi -o abis --overwrite && solc contracts/ConfigAddress.sol --bin -o bin --overwrite",
+    "graph:create": "graph create fatter-bo/hardcatstudy --node https://api.thegraph.com/deploy/",
+    "graph:create-local": "graph create fatter-bo/hardcatstudy --node http://127.0.0.1:8020",
+    "graph:codegen": "graph codegen",
+    "graph:build": "graph build",
+    "graph:deploy": "graph deploy fatter-bo/hardcatstudy --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "graph:deploy-local": "graph deploy fatter-bo/hardcatstudy --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
+    "graph:watch-local": "graph deploy fatter-bo/hardcatstudy --watch --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
+
     "prettier:solidity": "./node_modules/.bin/prettier contracts/",
     "dev": "hardhat node",
     "test": "hardhat test",

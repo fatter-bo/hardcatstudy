@@ -1,0 +1,20 @@
+# 客户端配置文件读取
+type ConfigAddress @entity {
+  # factory address
+  id: ID!
+
+  # 工厂合约地址
+  factoryAddress: Bytes!
+
+  # 外围路由合约 Router
+  routerAddress: Bytes!
+
+  # WETH合约地址
+  wethToken: Bytes!
+
+  # USDT合约地址
+  usdtToken: Bytes!
+
+  # 区块浏览器地址
+  blockUrl: String!
+}
