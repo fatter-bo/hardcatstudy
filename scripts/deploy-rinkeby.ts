@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import { ethers,network } from 'hardhat';
 import { ConfigAddress } from '../typechain/ConfigAddress';
+import { ACCOUNT_PRIVATE_KEY_RINKEBY } from '../.privatekey';
 import { StudyInc } from '../typechain/StudyInc';
 import { Contract } from 'ethers';
 //import { TransactionReceipt } from 'web3-eth';
@@ -10,12 +11,17 @@ import { TransactionResponse } from "@ethersproject/abstract-provider";
 
 const abi:AbiCoder = require('web3-eth-abi');
 let main = async () => {
-    const [owner,user] = await ethers.getSigners();
+    let owner = new ethers.Wallet(ACCOUNT_PRIVATE_KEY_RINKEBY, ethers.provider);
 
     console.log('deploy account:', owner.address, ethers.utils.formatEther((await owner.getBalance()).toString()));
 
     const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
     const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;
+    //const instance = (await ConfigAddressFactory.connect(owner).attach('0x8711286Bd02d0DB35a273347655ffC794E063d31')) as ConfigAddress;
+    let cmdStr = "sed -i -e   's/address.*#0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/address: \"" + instance.address + "\" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/g'  subgraph.yaml"
+    exec(cmdStr, function(err,stdout,stderr){});
+    cmdStr = "sed -i -e   's/network:.*#replace/network: rinkeby #replace/g'  subgraph.yaml"
+    exec(cmdStr, function(err,stdout,stderr){});
 
     console.log('ConfigAddress address:', instance.address)
     let ret = await instance.upsert(
@@ -24,11 +30,9 @@ let main = async () => {
         instance.address,
         instance.address,
         instance.address,
-        "https://rinkeby.etherscan.io",
-        "https://rinkeby.etherscan.io",
+        "https://rinkeby.etherscan.io/",
+        "https://rinkeby.etherscan.io/",
         network.name,ethers.provider._network.chainId);
-    let cmdStr = "sed -i -e   's/address.*#0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/address: \"" + instance.address + "\" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/g'  subgraph.yaml"
-    exec(cmdStr, function(err,stdout,stderr){});
     let blockNumber = ret.blockNumber ? ret.blockNumber : (await ret.wait()).blockNumber
     if(blockNumber){
         cmdStr = "sed -i -e   's/startBlock.*#0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/startBlock: " + blockNumber + " #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/g'  subgraph.yaml"

@@ -1,3 +1,15 @@
+type ERC20Token @entity {
+  # token address
+  id: ID! 
+
+  # mirrored from the smart contract
+  symbol: String!
+  name: String!
+  decimals: BigInt!
+
+  # 发行量
+  totalSupply: BigInt
+}
 # 客户端配置文件读取
 type ConfigAddress @entity {
   # factory address
@@ -9,12 +21,24 @@ type ConfigAddress @entity {
   # 外围路由合约 Router
   routerAddress: Bytes!
 
+  # 保证金合约地址
+  gstToken: ERC20Token!
+
   # WETH合约地址
-  wethToken: Bytes!
+  wethToken: ERC20Token!
 
   # USDT合约地址
-  usdtToken: Bytes!
+  usdtToken: ERC20Token!
+
+  # 区块浏览器地址
+  rpcUrl: String!
 
   # 区块浏览器地址
   blockUrl: String!
+
+  # 网络名称
+  networkName: String!
+
+  # chain_id
+  chainId: BigInt!
 }

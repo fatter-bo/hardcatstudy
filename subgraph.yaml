@@ -1,16 +1,16 @@
 specVersion: 0.0.2
 description: ConfigAddress for Ethereum
-repository: https://github.com/graphprotocol/example-subgraph
+repository: https://github.com/fatter-bo/hardcatstudy
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: ConfigAddress
-    network: mainnet
+    network: bsc #replace mainnet
     source:
-      address: "0x5Dae709378Fd6089fD320feb22a4e87B41D16380" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
+      address: "0x81Bb3A12CC447bdA00aA2Bf23407E105C2e9C672" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
       abi: ConfigAddress
-      startBlock: 2399
+      startBlock: 2000 #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -21,6 +21,6 @@ dataSources:
         - name: ConfigAddress
           file: ./abis/ConfigAddress.json
       eventHandlers:
-        - event: UpsertConfig(indexed address,indexed address,address,address,string)
+        - event: UpsertConfig(indexed address,indexed address,address,address,address,string,string,string,indexed uint256)
           handler: handleUpsertConfig
       file: ./src/mapping.ts
