@@ -17,6 +17,7 @@ let main = async () => {
 
     const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
     const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;
+    //const instance = (await ConfigAddressFactory.connect(owner).attach('0x76f601f92A58536001a9Ca69261c194B3111Fa8A')) as ConfigAddress;
 
     console.log('ConfigAddress address:', instance.address)
     let cmdStr = "sed -i -e   's/address.*#0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/address: \"" + instance.address + "\" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/g'  subgraph.yaml"

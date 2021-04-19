@@ -16,8 +16,15 @@ let main = async () => {
 
     const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
     const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;
+    //const instance = (await ConfigAddressFactory.connect(owner).attach('0x0a214B9Dd916611018DDd931687A6F7fC7F40e4C')) as ConfigAddress;
 
     console.log('ConfigAddress address:', instance.address)
+
+    let cmdStr = "sed -i -e   's/address.*#0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/address: \"" + instance.address + "\" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/g'  subgraph.yaml"
+    exec(cmdStr, function(err,stdout,stderr){});
+    cmdStr = "sed -i -e   's/network:.*#replace/network: mainnet #replace/g'  subgraph.yaml"
+    exec(cmdStr, function(err,stdout,stderr){});
+
     let ret = await instance.upsert(
         instance.address,
         instance.address,
@@ -27,8 +34,6 @@ let main = async () => {
         "https://rinkeby.etherscan.io",
         "https://rinkeby.etherscan.io",
         network.name,ethers.provider._network.chainId);
-    let cmdStr = "sed -i -e   's/address.*#0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/address: \"" + instance.address + "\" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/g'  subgraph.yaml"
-    exec(cmdStr, function(err,stdout,stderr){});
     let blockNumber = ret.blockNumber ? ret.blockNumber : (await ret.wait()).blockNumber
     if(blockNumber){
         cmdStr = "sed -i -e   's/startBlock.*#0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/startBlock: " + blockNumber + " #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32/g'  subgraph.yaml"

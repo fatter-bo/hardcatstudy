@@ -1,6 +1,6 @@
 import { UpsertConfig } from '../generated/ConfigAddress/ConfigAddress'
 import { ERC20Token, ConfigAddress } from '../generated/schema'
-import { BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { BigInt, ethereum, Bytes, log } from '@graphprotocol/graph-ts'
 
 export function handleUpsertConfig(event: UpsertConfig): void {
   let id = event.params.factoryAddress.toHex();
@@ -41,5 +41,12 @@ export function handleUpsertConfig(event: UpsertConfig): void {
   config.rpcUrl = event.params.rpcUrl
   config.blockUrl = event.params.blockUrl
   config.chainId = event.params.chainId
+  log.error("xxxxxxxxxxxxxxxxxx:"+id,[]);
   config.save()
+}
+export function handleBlock(block: ethereum.Block): void {
+  let id = block.hash.toHex()
+  log.debug("xxxxxxxxxxxxxxxxxx"+id,[]);
+  //let entity = new Block(id)
+  //entity.save()
 }
