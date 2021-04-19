@@ -14,7 +14,6 @@
     "graph:deploy-bsc": "graph deploy fatter-bo/hardcatstudy --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "graph:deploy-local": "graph deploy fatter-bo/hardcatstudy --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
     "graph:watch-local": "graph deploy fatter-bo/hardcatstudy --watch --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
-
     "prettier:solidity": "./node_modules/.bin/prettier contracts/",
     "dev": "hardhat node",
     "test": "hardhat test",
@@ -35,13 +34,13 @@
     ]
   },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "^0.20.0",
-    "@graphprotocol/graph-ts": "^0.20.0",
     "@ethersproject/address": "^5.0.10",
     "@ethersproject/contracts": "^5.0.10",
     "@ethersproject/networks": "^5.0.8",
     "@ethersproject/providers": "^5.0.21",
     "@ethersproject/solidity": "^5.0.9",
+    "@graphprotocol/graph-cli": "^0.20.0",
+    "@graphprotocol/graph-ts": "^0.20.0",
     "@nomiclabs/hardhat-ethers": "^2.0.1",
     "@nomiclabs/hardhat-etherscan": "^2.1.1",
     "@typechain/ethers-v5": "^6.0.5",
@@ -54,7 +53,7 @@
     "ethereumjs-util": "^7.0.8",
     "ethers": "^5.0.29",
     "ganache-cli": "^6.12.2",
-    "hardhat": "^2.0.8",
+    "hardhat": "^2.2.0",
     "hardhat-gas-reporter": "^1.0.4",
     "hardhat-typechain": "^0.3.5",
     "husky": "^6.0.0",
