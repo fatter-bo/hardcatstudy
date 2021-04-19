@@ -41,4 +41,7 @@ type ConfigAddress @entity {
 
   # chain_id
   chainId: BigInt!
+
+  # 其他用来游戏的代币也可以随时配置添加
+  gameTokens: [ERC20Token!]!
 }

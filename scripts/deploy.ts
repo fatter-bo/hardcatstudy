@@ -1,10 +1,11 @@
 import { exec } from 'child_process';
-import { ethers,network } from 'hardhat';
+import { config, ethers,network } from 'hardhat';
 import { ConfigAddress } from '../typechain/ConfigAddress';
-import { StudyInc } from '../typechain/StudyInc';
+import { ERC20 } from '../typechain/ERC20';
 import { Contract } from 'ethers';
 //import { TransactionReceipt } from 'web3-eth';
 import { AbiCoder } from 'web3-eth-abi';
+import { ReplaceLine } from './boutils';
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 
@@ -15,8 +16,14 @@ let main = async () => {
     console.log('deploy account:', owner.address, ethers.utils.formatEther((await owner.getBalance()).toString()));
 
     const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
+    const instance = (await ConfigAddressFactory.connect(owner).attach("0x9e259d392afbf99a013186a36d650e06ec9A5669"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
+    console.log('ConfigAddress address:', instance.address)
+    /*
     const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;
-    //const instance = (await ConfigAddressFactory.connect(owner).attach('0x0a214B9Dd916611018DDd931687A6F7fC7F40e4C')) as ConfigAddress;
+    ReplaceLine('scripts/deploy.ts',
+    'attach.*\\/\\/0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9',
+    'attach("' + instance.address + '"))as ConfigAddress;\\/\\/0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9'
+);
 
     console.log('ConfigAddress address:', instance.address)
 
@@ -50,6 +57,26 @@ let main = async () => {
         "https://rinkeby.infura.io/v3/undefined",
         "https://rinkeby.etherscan.io",
         'Rinkeby Test NetWork',4);
+    // */
+
+    const ERC20Factory = await ethers.getContractFactory('ERC20');
+    let instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST","BOST",18)) as ERC20;
+    console.log('ERC20 address:', instanceERC20.address)
+    await instance.upsertGameToken(instance.address,"BOST",instanceERC20.address);
+    instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST2","BOST2",18)) as ERC20;
+    console.log('ERC20 address:', instanceERC20.address)
+    await instance.upsertGameToken(instance.address,"BSDT1",instanceERC20.address);
+    instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST2","BOST2",18)) as ERC20;
+    console.log('ERC20 address:', instanceERC20.address)
+    await instance.upsertGameToken(instance.address,"BSDT2",instanceERC20.address);
+    instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST3","BOST3",18)) as ERC20;
+    console.log('ERC20 address:', instanceERC20.address)
+    await instance.upsertGameToken(instance.address,"BSDT3",instanceERC20.address);
+    instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST4","BOST4",18)) as ERC20;
+    console.log('ERC20 address:', instanceERC20.address)
+    await instance.upsertGameToken(instance.address,"BSDT4",instanceERC20.address);
+    // */
+    console.log('upsertGameToken address:', await instance.getGameToken(instance.address,"BSDT2"))
 
 };
 

@@ -8,9 +8,9 @@ dataSources:
     name: ConfigAddress
     network: mainnet #replace mainnet
     source:
-      address: "0xbc46C5bB5Eef17084D1998f0d9924371867f92bA" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
+      address: "0x9e259d392afbf99a013186a36d650e06ec9A5669" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
       abi: ConfigAddress
-      startBlock: 2525 #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
+      #startBlock: 3032 #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -23,11 +23,13 @@ dataSources:
       eventHandlers:
         - event: UpsertConfig(indexed address,indexed address,address,address,address,string,string,string,indexed uint256)
           handler: handleUpsertConfig
+        - event: UpsertGameToken(indexed address,indexed string,indexed address)
+          handler: handleUpsertGameToken
       #callHandlers:
         #- function: createGravatar(string,string)
         #  handler: handleCreateGravatar
-      blockHandlers:
-        - handler: handleBlock
+      #blockHandlers:
+      #  - handler: handleBlock
         #- handler: handleBlockWithCallToContract
         #  filter:
         #    kind: call
