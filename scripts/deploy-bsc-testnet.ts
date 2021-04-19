@@ -5,13 +5,13 @@ import { StudyInc } from '../typechain/StudyInc';
 import { Contract } from 'ethers';
 //import { TransactionReceipt } from 'web3-eth';
 import { AbiCoder } from 'web3-eth-abi';
-import { ACCOUNT_PRIVATE_KEY_BSC } from '../.privatekey';
+import { ACCOUNT_PRIVATE_KEY_BSC_TESTNET } from '../.privatekey';
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 
 const abi:AbiCoder = require('web3-eth-abi');
 let main = async () => {
-    let owner = new ethers.Wallet(ACCOUNT_PRIVATE_KEY_BSC, ethers.provider);
+    let owner = new ethers.Wallet(ACCOUNT_PRIVATE_KEY_BSC_TESTNET, ethers.provider);
 
     console.log('deploy account:', owner.address, ethers.utils.formatEther((await owner.getBalance()).toString()));
 
