@@ -23,6 +23,6 @@ typechain
 yarn.lock
 package-lock.json
 .privatekey.ts
-subgraph.yaml-e
+*-e
 logs
 

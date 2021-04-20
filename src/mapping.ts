@@ -1,5 +1,7 @@
 import { UpsertConfig,UpsertGameToken } from '../generated/ConfigAddress/ConfigAddress'
 import { ERC20Token, ConfigAddress } from '../generated/schema'
+import { ERC20 } from '../generated/ConfigAddress/ERC20'
+import * as boutils from '../scripts/boutils'
 import { BigInt, ethereum, Bytes, log } from '@graphprotocol/graph-ts'
 
 export function handleUpsertConfig(event: UpsertConfig): void {
@@ -50,39 +52,40 @@ export function handleUpsertGameToken(event: UpsertGameToken): void {
   log.info("xxxxxxxxxxxxxxxxxx:handleUpsertGameToken:",[]);
   var config = ConfigAddress.load(id)
   if (config == null) {
-  log.info("please UpsertConfig first: {}",[id]);
-    config = new ConfigAddress(id)
+    log.info("please UpsertConfig first: {}", [id]);
+    return;
   }
   let tokenId = event.params.tokenAddress.toHexString();
-  var index = -1;
-  log.info("xxxxxxxxxxxxxxxxxx:handleUpsertGameToken:0:{},{}",[index.toString(),event.params.tokenSymbol.toString()]);
-  let gameTokens = config.gameTokens;
+  let tokenName = boutils.getTokenSymbol(event.params.tokenAddress);
+  var index = -2; // -1竟然不行,对ts还不熟悉。。。
+  let gameTokens = config.gameTokens; //这里必须先复制,否则就存不进去,太奇怪了
   for (let i = 0; i < gameTokens.length; i++) {
     let token = ERC20Token.load(gameTokens[i]);
     // 这里需要检查是否已经无效
     if (token != null && token.symbol == event.params.tokenSymbol.toString()) {
-      log.info("xxxxxxxxxxxxxxxxxx:handleUpsertGameToken:2:{}", [i.toString()]);
       index = i;
       break;
     }
     
   }
-  log.info("xxxxxxxxxxxxxxxxxx:handleUpsertGameToken:3:{}",[index.toString()]);
-  if(index != -1){
+  if(index != -2){
     config.gameTokens.slice(index,1);
   }
-  log.info("xxxxxxxxxxxxxxxxxx:handleUpsertGameToken:4:{}",[index.toString()]);
-  let token = ERC20Token.load(event.params.tokenSymbol.toHexString());
+  let token = ERC20Token.load(event.params.tokenSymbol);
   if (token == null) {
-    token = new ERC20Token(event.params.tokenSymbol.toHexString());
+    token = new ERC20Token(event.params.tokenSymbol);
     //TODO 这里需要去合约里取token信息
     token.name = config.networkName + " " + event.params.tokenSymbol.toString();
-    token.symbol = event.params.tokenSymbol.toString();
-    token.decimals = BigInt.fromI32(18);
+    token.symbol = tokenName;//event.params.tokenSymbol.toString();
+    token.decimals = BigInt.fromI32(boutils.getTokenDecimals(event.params.tokenAddress));
     token.save();
   }
-  config.gameTokens.push(tokenId);
-  config.gameTokens.sort();
+  let tokens = config.gameTokens;
+  let len = tokens.length;
+  tokens.push(tokenId);
+  tokens.sort();
+  len = tokens.length;
+  config.gameTokens = tokens;
   config.save()
   // */
 }

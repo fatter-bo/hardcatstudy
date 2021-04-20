@@ -6,6 +6,7 @@ import { Contract } from 'ethers';
 //import { TransactionReceipt } from 'web3-eth';
 import { AbiCoder } from 'web3-eth-abi';
 import { ReplaceLine } from './boutils';
+import { getTokensByNetwork } from './tokens';
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 
@@ -16,9 +17,8 @@ let main = async () => {
     console.log('deploy account:', owner.address, ethers.utils.formatEther((await owner.getBalance()).toString()));
 
     const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
-    const instance = (await ConfigAddressFactory.connect(owner).attach("0x9e259d392afbf99a013186a36d650e06ec9A5669"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
-    console.log('ConfigAddress address:', instance.address)
-    /*
+    //const instance = (await ConfigAddressFactory.connect(owner).attach("0x030AC19Ae1AFa0ec7E25f18c6Db6cC8e5331b721"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
+    //console.log('ConfigAddress address:', instance.address)
     const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;
     ReplaceLine('scripts/deploy.ts',
     'attach.*\\/\\/0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9',
@@ -59,6 +59,13 @@ let main = async () => {
         'Rinkeby Test NetWork',4);
     // */
 
+    let tokens = getTokensByNetwork(network.name);
+    if (tokens != null) {
+        for (let index = 0; index < tokens.length; index++) {
+            const element = tokens[index];
+            await instance.upsertGameToken(instance.address, element.symbol, element.address);
+        }
+    }
     const ERC20Factory = await ethers.getContractFactory('ERC20');
     let instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST","BOST",18)) as ERC20;
     console.log('ERC20 address:', instanceERC20.address)

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.3;
 
 contract ConfigAddress {
-  event UpsertGameToken(address indexed factoryAddress,string indexed tokenSymbol,address indexed tokenAddress);
+  event UpsertGameToken(address indexed factoryAddress,address indexed tokenAddress,string tokenSymbol);
   event UpsertConfig(address indexed factoryAddress,address indexed routerAddress,address gstToken,address wethToken,address usdtToken,string rpcUrl,string blockUrl,string networkName,uint256 indexed chainId);
   struct Config {
     // 工厂合约地址
@@ -92,7 +92,7 @@ contract ConfigAddress {
   function upsertGameToken(address factoryAddress,string memory tokenSymbol,address tokenAdress) public {
     Config storage config  = configMap[factoryAddress];
     config.gameTokenMap[tokenSymbol] = tokenAdress;
-    emit UpsertGameToken(factoryAddress,tokenSymbol,tokenAdress);
+    emit UpsertGameToken(factoryAddress,tokenAdress,tokenSymbol);
   }
   function getGameToken(address factoryAddress,string memory tokenSymbol) public view returns(address) {
     Config storage config  = configMap[factoryAddress];
