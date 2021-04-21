@@ -1,18 +1,12 @@
 import { UpsertConfig,UpsertGameToken } from '../generated/ConfigAddress/ConfigAddress'
 import { ERC20Token, ConfigAddress } from '../generated/schema'
 import { ERC20 } from '../generated/ConfigAddress/ERC20'
-import * as boutils from '../scripts/boutils'
+import * as boutils from './boutils'
 import { BigInt, ethereum, Bytes, log } from '@graphprotocol/graph-ts'
 
 export function handleUpsertConfig(event: UpsertConfig): void {
   let id = event.params.factoryAddress.toHex();
   log.info("xxxxxxxxxxxxxxxxxx:handleUpsertConfig:"+id,[]);
-  let config = ConfigAddress.load(id)
-  if (config == null) {
-    config = new ConfigAddress(id)
-  }
-  config.factoryAddress = event.params.factoryAddress
-  config.routerAddress = event.params.routerAddress
   let gstToken = ERC20Token.load(event.params.gstToken.toHexString());
   if (gstToken == null) {
     gstToken = new ERC20Token(event.params.gstToken.toHexString());
@@ -37,6 +31,13 @@ export function handleUpsertConfig(event: UpsertConfig): void {
     usdtToken.decimals = BigInt.fromI32(18)
     usdtToken.save();
   }
+  let config = ConfigAddress.load(id)
+  if (config == null) {
+    config = new ConfigAddress(id)
+    config.gameTokens = []
+  }
+  config.factoryAddress = event.params.factoryAddress
+  config.routerAddress = event.params.routerAddress
   config.gstToken = gstToken.id
   config.wethToken = wethToken.id
   config.usdtToken = usdtToken.id
@@ -44,7 +45,6 @@ export function handleUpsertConfig(event: UpsertConfig): void {
   config.rpcUrl = event.params.rpcUrl
   config.blockUrl = event.params.blockUrl
   config.chainId = event.params.chainId
-  config.gameTokens = [usdtToken.id,wethToken.id]
   config.save()
 }
 export function handleUpsertGameToken(event: UpsertGameToken): void {
@@ -73,11 +73,11 @@ export function handleUpsertGameToken(event: UpsertGameToken): void {
   }
   let token = ERC20Token.load(event.params.tokenSymbol);
   if (token == null) {
-    token = new ERC20Token(event.params.tokenSymbol);
+    token = new ERC20Token(event.params.tokenAddress.toHex());
     //TODO 这里需要去合约里取token信息
     token.name = config.networkName + " " + event.params.tokenSymbol.toString();
     token.symbol = tokenName;//event.params.tokenSymbol.toString();
-    token.decimals = BigInt.fromI32(boutils.getTokenDecimals(event.params.tokenAddress));
+    token.decimals = boutils.getTokenDecimals(event.params.tokenAddress);
     token.save();
   }
   let tokens = config.gameTokens;
@@ -85,6 +85,7 @@ export function handleUpsertGameToken(event: UpsertGameToken): void {
   tokens.push(tokenId);
   tokens.sort();
   len = tokens.length;
+  //config.unset("gameTokens");
   config.gameTokens = tokens;
   config.save()
   // */

@@ -17,8 +17,9 @@ let main = async () => {
     console.log('deploy account:', owner.address, ethers.utils.formatEther((await owner.getBalance()).toString()));
 
     const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
-    //const instance = (await ConfigAddressFactory.connect(owner).attach("0x030AC19Ae1AFa0ec7E25f18c6Db6cC8e5331b721"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
-    //console.log('ConfigAddress address:', instance.address)
+    const instance = (await ConfigAddressFactory.connect(owner).attach("0x414B1b578023839A4Aa9165E51b35C2A6352fceE"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
+    console.log('ConfigAddress address:', instance.address)
+    /*
     const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;
     ReplaceLine('scripts/deploy.ts',
     'attach.*\\/\\/0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9',
@@ -59,6 +60,7 @@ let main = async () => {
         'Rinkeby Test NetWork',4);
     // */
 
+    await instance.updateBlockUrl(instance.address,"test4");
     let tokens = getTokensByNetwork(network.name);
     if (tokens != null) {
         for (let index = 0; index < tokens.length; index++) {
@@ -67,9 +69,10 @@ let main = async () => {
         }
     }
     const ERC20Factory = await ethers.getContractFactory('ERC20');
-    let instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST","BOST",18)) as ERC20;
+    let instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST6","BOST6",18)) as ERC20;
     console.log('ERC20 address:', instanceERC20.address)
-    await instance.upsertGameToken(instance.address,"BOST",instanceERC20.address);
+    await instance.upsertGameToken(instance.address,"BOST6",instanceERC20.address);
+    /*
     instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST2","BOST2",18)) as ERC20;
     console.log('ERC20 address:', instanceERC20.address)
     await instance.upsertGameToken(instance.address,"BSDT1",instanceERC20.address);

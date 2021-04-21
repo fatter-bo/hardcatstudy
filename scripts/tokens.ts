@@ -1,4 +1,3 @@
-import { AnySrvRecord } from "node:dns";
 
 export const TOKENS_BSC_TESTNET = [
     {symbol:'tUSDC',address:'0x0b2af20b7ef759b1540a8844740bfe7ef4e5d1de'},

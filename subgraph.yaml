@@ -8,9 +8,9 @@ dataSources:
     name: ConfigAddress
     network: mainnet #replace mainnet
     source:
-      address: "0x030AC19Ae1AFa0ec7E25f18c6Db6cC8e5331b721" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
+      address: "0x414B1b578023839A4Aa9165E51b35C2A6352fceE" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
       abi: ConfigAddress
-      #startBlock: 3045 #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
+      #startBlock: 3147 #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
