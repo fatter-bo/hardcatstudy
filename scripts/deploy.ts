@@ -5,6 +5,7 @@ import { ERC20 } from '../typechain/ERC20';
 import { Contract } from 'ethers';
 //import { TransactionReceipt } from 'web3-eth';
 import { AbiCoder } from 'web3-eth-abi';
+import { ACCOUNT_PRIVATE_KEY_BSC_TESTNET } from '../.privatekey';
 import { ReplaceLine } from './boutils';
 import { getTokensByNetwork } from './tokens';
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
@@ -12,14 +13,18 @@ import { TransactionResponse } from "@ethersproject/abstract-provider";
 
 const abi:AbiCoder = require('web3-eth-abi');
 let main = async () => {
-    const [owner,user] = await ethers.getSigners();
+    let owner;
+    if (network.name == "bsctestnet") {
+        owner = new ethers.Wallet(ACCOUNT_PRIVATE_KEY_BSC_TESTNET, ethers.provider);
+    }else{//其他网络的部署账号配置
+        [owner] = await ethers.getSigners();
+    }
 
     console.log('deploy account:', owner.address, ethers.utils.formatEther((await owner.getBalance()).toString()));
 
     const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
-    const instance = (await ConfigAddressFactory.connect(owner).attach("0x414B1b578023839A4Aa9165E51b35C2A6352fceE"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
-    console.log('ConfigAddress address:', instance.address)
-    /*
+    //const instance = (await ConfigAddressFactory.connect(owner).attach("0xC4DC78d5d00F5d4C1a17d528Ee8e9A3BCFd74CF6"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
+    //console.log('ConfigAddress address:', instance.address)
     const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;
     ReplaceLine('scripts/deploy.ts',
     'attach.*\\/\\/0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9',
@@ -72,7 +77,6 @@ let main = async () => {
     let instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST6","BOST6",18)) as ERC20;
     console.log('ERC20 address:', instanceERC20.address)
     await instance.upsertGameToken(instance.address,"BOST6",instanceERC20.address);
-    /*
     instanceERC20 = (await ERC20Factory.connect(owner).deploy("ganache BOST2","BOST2",18)) as ERC20;
     console.log('ERC20 address:', instanceERC20.address)
     await instance.upsertGameToken(instance.address,"BSDT1",instanceERC20.address);
