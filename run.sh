@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npx hardhat run --network ganache $*
+npx hardhat run --network localhost $*

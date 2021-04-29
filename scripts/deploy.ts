@@ -23,13 +23,13 @@ let main = async () => {
     console.log('deploy account:', owner.address, ethers.utils.formatEther((await owner.getBalance()).toString()));
 
     const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
-    //const instance = (await ConfigAddressFactory.connect(owner).attach("0xC4DC78d5d00F5d4C1a17d528Ee8e9A3BCFd74CF6"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
+    //const instance = (await ConfigAddressFactory.connect(owner).attach("0x301D643ae3AEB3094Cfb7F26014C4E49618A429F"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
     //console.log('ConfigAddress address:', instance.address)
     const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;
     ReplaceLine('scripts/deploy.ts',
-    'attach.*\\/\\/0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9',
-    'attach("' + instance.address + '"))as ConfigAddress;\\/\\/0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9'
-);
+        'attach.*\\/\\/0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9',
+        'attach("' + instance.address + '"))as ConfigAddress;\\/\\/0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9'
+    );
 
     console.log('ConfigAddress address:', instance.address)
 

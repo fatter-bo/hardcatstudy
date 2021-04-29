@@ -28,6 +28,7 @@ let main = async () => {
     console.log('xxxxxxxxxxxxxxxxxxxxxx:', (await instanceInc.x()).toString(), (await instance.y()).toString());
     await instance.functionCall(instanceInc.address,"errerr");
     console.log('xxxxxxxxxxxxxxxxxxxxxx:', (await instanceInc.x()).toString(), (await instance.y()).toString());
+    console.log('xxxxxxxxxxxxxxxxxxxxxx:', owner.address,instance.address,(await (await instance.getAddress(instanceInc.address)).wait()).events);
 };
 
 main();

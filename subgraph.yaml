@@ -1,6 +1,9 @@
 specVersion: 0.0.2
 description: ConfigAddress for Ethereum
 repository: https://github.com/fatter-bo/hardcatstudy
+# 研发期报错先不挺
+features:
+  - nonFatalErrors
 schema:
   file: ./schema.graphql
 dataSources:
@@ -8,9 +11,9 @@ dataSources:
     name: ConfigAddress
     network: mainnet #replace mainnet
     source:
-      address: "0xC4DC78d5d00F5d4C1a17d528Ee8e9A3BCFd74CF6" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
+      address: "0x301D643ae3AEB3094Cfb7F26014C4E49618A429F" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
       abi: ConfigAddress
-      #startBlock: 8160775 #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
+      #startBlock: 3188 #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
