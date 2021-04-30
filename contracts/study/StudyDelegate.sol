@@ -3,6 +3,7 @@
 pragma solidity >=0.7.6 <0.9.0;
 
 import '../utils/Address.sol';
+
 import 'hardhat/console.sol';
 
 contract StudyInc {
@@ -17,9 +18,12 @@ contract StudyInc {
 
     fallback() external {}
 
+    event Inc(uint256);
+
     function inc(uint256 i) public {
         x = i;
         y = 2 * i;
+        emit Inc(x);
     }
 
     function getxy() public view returns (uint256, uint256) {
