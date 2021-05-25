@@ -12,7 +12,7 @@ contract StudyModifer {
         require(_locked == 1, 'locked');
         console.log('_locked beg:', _locked);
         _locked = 0;
-        _;
+        _; //这里相当于调用函数的函数体,上面和下面部分被插入到函数体里执行
         console.log('_locked end:', _locked);
         _locked = 1;
     }
