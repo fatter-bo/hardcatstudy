@@ -11,9 +11,11 @@ contract StudyInc {
     uint256 public x;
     uint256 public y;
     address public owner;
+    address public thisaddr;
 
     constructor() {
         owner = msg.sender;
+        thisaddr = address(this);
     }
 
     fallback() external {}
@@ -21,9 +23,17 @@ contract StudyInc {
     event Inc(uint256);
 
     function inc(uint256 i) public {
+        thisaddr = address(this);
         x = i;
         y = 2 * i;
         emit Inc(x);
+    }
+
+    function inc_delegatecall1(uint256 i) public {
+        //thisaddr = address(this);
+        // StudyInc(thisaddr).inc(i);
+        (bool sucess, ) = address(this).delegatecall(abi.encodeWithSelector(bytes4(keccak256('inc(uint256)')), i));
+        require(sucess);
     }
 
     function getxy() public view returns (uint256, uint256) {
@@ -93,7 +103,15 @@ contract StudyDelegate {
         (uint256 addx, uint256 addy) = staticcall(addr);
         addx += addy + 1;
         //(bool sucess,) = addr.callcode(bytes4(keccak256("inc()")));
-        (bool sucess, ) = addr.delegatecall(abi.encodeWithSelector(bytes4(keccak256('inc(uint256)')), addx));
+        (bool sucess, ) =
+            addr.delegatecall(abi.encodeWithSelector(bytes4(keccak256('inc_delegatecall1(uint256)')), addr));
+        require(sucess);
+    }
+
+    function delegatecall_me(address addr) public {
+        //(bool sucess,) = addr.callcode(bytes4(keccak256("inc()")));
+        (bool sucess, ) =
+            address(this).delegatecall(abi.encodeWithSelector(bytes4(keccak256('inc_delegatecall(address)')), addr));
         require(sucess);
     }
 

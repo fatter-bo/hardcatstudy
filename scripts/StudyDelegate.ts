@@ -28,25 +28,49 @@ let main = async () => {
   //await instanceInc.inc();
   //await instance.set(1);
   await instance.inc_call(instanceInc.address);
-  console.log('instance.x:', await instance.y());
-  console.log('instanceInc.x:', await instanceInc.x(), await instanceInc.y());
+  console.log('instance.x:', (await instance.y()).toString());
+  console.log(
+    'instanceInc.x:',
+    instanceInc.address,
+    await instanceInc.thisaddr(),
+    (await instanceInc.x()).toString(),
+    (await instanceInc.y()).toString()
+  );
   await instance.inc_call(instanceInc.address);
   console.log('instance.x:', await instance.y());
-  console.log('instanceInc.x:', await instanceInc.x(), await instanceInc.y());
+  console.log(
+    'instanceInc.x:',
+    instanceInc.address,
+    await instanceInc.thisaddr(),
+    (await instanceInc.x()).toString(),
+    (await instanceInc.y()).toString()
+  );
+  console.log('instanceInc.x:', await instanceInc.thisaddr(), (await instanceInc.x()).toString());
+  await instanceInc.inc_delegatecall1(22);
+  console.log('instanceInc.x:', await instanceInc.thisaddr(), (await instanceInc.x()).toString());
+  await instanceInc.inc(23);
+  console.log('instanceInc.x:', await instanceInc.thisaddr(), (await instanceInc.x()).toString());
   await instance.inc_delegatecall(instanceInc.address);
-  console.log('instance.x:', await instance.y());
-  console.log('instanceInc.x:', await instanceInc.x(), await instanceInc.y());
+  // await instance.delegatecall_me(instanceInc.address);
+  console.log('instance.x:', (await instance.y()).toString());
+  console.log(
+    'instanceInc.x:',
+    instanceInc.address,
+    await instanceInc.thisaddr(),
+    (await instanceInc.x()).toString(),
+    (await instanceInc.y()).toString()
+  );
   console.log('instance.encode:', await instance.encode());
   console.log('instance.keccak:', await instance.keccak());
   console.log('xxxxxxxxxxxxxxxxxxxxxx:', (await instanceInc.x()).toString(), (await instance.y()).toString());
   await instance.functionCall(instanceInc.address, 'errerr');
   console.log('xxxxxxxxxxxxxxxxxxxxxx:', (await instanceInc.x()).toString(), (await instance.y()).toString());
-  console.log(
-    'xxxxxxxxxxxxxxxxxxxxxx:',
-    owner.address,
-    instance.address,
-    (await (await instance.getAddress(instanceInc.address)).wait()).events
-  );
+  // console.log(
+  //   'xxxxxxxxxxxxxxxxxxxxxx:',
+  //   owner.address,
+  //   instance.address,
+  //   (await (await instance.getAddress(instanceInc.address)).wait()).events
+  // );
 };
 
 main();

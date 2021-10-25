@@ -3,8 +3,32 @@
 pragma solidity >=0.7.6 <0.9.0;
 
 import '../utils/Address.sol';
+import 'hardhat/console.sol';
+
+library LibBytes {
+    using LibBytes for bytes;
+
+    function readBytes4(bytes memory b, uint256 index) internal pure returns (bytes4 result) {
+        // Arrays are prefixed by a 32 byte length field
+        index += 32;
+
+        // Read the bytes4 from array memory
+        assembly {
+            result := mload(add(b, index))
+            // Solidity does not require us to clean the trailing bytes.
+            // We do it anyway
+            result := and(result, 0xFFFFFFFF00000000000000000000000000000000000000000000000000000000)
+        }
+        return result;
+    }
+}
 
 contract StudyAbi {
+    struct U8U8 {
+        uint8 u0;
+        uint8 u1;
+    }
+    using LibBytes for bytes;
     using Address for address;
     using Address for address payable;
     uint256 storedData;
@@ -111,27 +135,177 @@ contract StudyAbi {
         return abi.encodeWithSignature('set(uint256)', 1); //计算函数set(uint256) 及参数1 的ABI 编码
     }
 
-    function abiEncode1() public pure returns (bytes memory) {
+    function abiEncode1(uint8 u8, uint8 u81) public returns (bytes memory) {
+        console.log('xxxx:', msg.data.length, u8, uint32(bytes4(msg.data.readBytes4(0))));
+
+        // bytes calldata test = msg.data[0:4];
+        // address(this).delegatecall(test);
+        bytes memory selector = new bytes(msg.data.length);
+        for (uint256 i = 0; i < msg.data.length; i++) {
+            selector[i] = msg.data[i];
+        }
+
+        // address addr = address(bytes20(msg.data[0:20]));
+        // uint8 i = abi.decode(selector, (uint8));
+        // console.log('xxxx:', i);
+        // bytes memory selector = new bytes(4);
+        // for (uint256 i = 0; i < 4; i++) {
+        //     selector[i] = msg.data[i];
+        // }
+        // address(this).delegatecall(selector);
+        // (bytes4 selector1, U8U8 memory uu1) = abi.decode(msg.data, (bytes4, U8U8));
+        // ( uint8 uu0, uint8 uu1) = abi.decode(msg.data[4:], ( uint8, uint8));
+        console.log('U8U8:');
+        bytes memory data = msg.data;
+        ( U8U8 memory uu1) = abi.decode(msg.data[4:], ( U8U8));
+        bytes memory data2 = abi.encodePacked(uu1.u0);
+        console.log('U8U8:', uu1.u0, uu1.u1,data2.length);
+        ( uint8 u8) = abi.decode(msg.data[4:], ( uint8));
+        console.log('uint8:', u8);
+        U8U8 memory uu = U8U8({u0: u81, u1: u8});
+        bytes memory encode = abi.encodeWithSelector(this.abiEncode1.selector, uu);
+        console.log('U8U8:', encode.length, u8, uint32(bytes4(data.readBytes4(0))));
+        // (bytes4 selector2, U8U8 memory uu2) = abi.decode(encode, (bytes4, U8U8));
+        uint256 add0 = contentAddress(encode);
+        //  memCopy32(add0+encode.length-32,add0+encode.length-64);
+        // address(this).delegatecall(encode);
+        uint256 add1 = contentAddress(data);
+         memCopy32(add1+data.length-32,add0+data.length-64);
+         bytes memory input = abi.encode(15);
+         uint256 inputAddress;
+         uint256 dataAddress;
+                     assembly {
+                dataAddress := add(data, 32)
+                     }
+                      dataAddress = dataAddress + data.length-32;
+                     assembly {
+                inputAddress := add(input, 32)
+                mstore(dataAddress, mload(inputAddress))
+                     }
+
+        address(this).delegatecall(data);
+        // address(this).delegatecall(msg.data);
         return abi.encode('1'); // 计算1的ABI编码
+    }
+    function memCopy32(uint256 dst,uint256 src) public pure {
+        assembly {
+            mstore(dst, mload(src))
+        }  
+    }
+        function contentAddress(bytes memory input)
+        internal
+        pure
+        returns (uint256 memoryAddress)
+    {
+        assembly {
+            memoryAddress := add(input, 32)
+        }
+        return memoryAddress;
+    }
+    function tradevCommon1(bytes calldata dataheader) public returns (uint256 amountOut) {
+        console.log("tradevCommon0:",gasleft(),dataheader.length);
+        (uint256 out1,uint256 out2) = abi.decode(dataheader, (uint256,uint256));
+        console.log("tradevCommon1:",out1,dataheader.length);
+        console.log("tradevCommon2:",out2,dataheader.length);
+                    //改变输入值
+            bytes memory data = dataheader[4:dataheader.length];
+            uint256 dataAddress;
+            assembly {
+                dataAddress := add(data, 32)
+            }
+            // dataAddress = dataAddress + 4; //把前四个字节的函数去掉
+            //从后往前处理性价比更高
+        console.log("tmp1:",gasleft(),dataAddress,dataAddress + dataheader.length - 32);
+            for (uint256 i = dataAddress + dataheader.length - 32; i > 32; i -= 32) {
+                uint256 tmp;
+                assembly {
+                    tmp := mload(i)
+                }
+                //这个数字是ts里能表达出来的最大数字-1
+                if (tmp == 0xFFFFFFFFFFFFE) {
+                    assembly {
+                        mstore(i, 1111)
+                    tmp := mload(i)
+                    }
+        console.log("tmp:",gasleft(),tmp);
+                    break;
+                }
+            }
+        console.log("tmp2:",gasleft());
+    }
+    function tradevCommon(uint256 amountIn,uint256 selectorDataBegin,uint256 selectorDataLen, bytes calldata dataheader) public returns (uint256 amountOut) {
+        console.log("tradevCommon:",amountIn,dataheader.length);
+            //改变输入值
+            // bytes memory data = msg.data[selectorDataBegin:selectorDataBegin +
+            //     selectorDataLen];
+            bytes memory data1 = dataheader;
+            bytes memory amountInData = abi.encode(amountIn);
+            uint256 dataAddress;
+            uint256 amountInAddress;
+            assembly {
+                dataAddress := add(data1, 32)
+            }
+            dataAddress = dataAddress + 4; //把前四个字节的函数去掉
+            for (uint256 i = dataAddress; i < dataAddress + data1.length - 4; i += 32) {
+                uint256 tmp;
+                assembly {
+                    tmp := mload(i)
+                }
+                //-3表示
+                if (tmp == 0xFFFFFFFFFFFFE) {
+                    assembly {
+                        mstore(i, 0xFFFFFFFFFFFFE)
+                    }
+                    break;
+                }
+                bytes memory tmp1 = abi.encodeWithSelector(this.tradevCommon1.selector);
+        console.log("tradevCommon:",tmp,tmp1.length, dataheader.length);
+            }
+            uint256 tmp1;
+            uint256 tmp2;
+             address(0x2Dd78Fd9B8F40659Af32eF98555B8b31bC97A351).call(data1);
+            dataAddress = dataAddress + data1.length - 4-32; //把前四个字节的函数去掉
+            assembly {
+                amountInAddress := add(amountInData, 32)
+                tmp1 := mload(dataAddress)
+                mstore(dataAddress, mload(amountInAddress))
+                tmp2 := mload(dataAddress)
+            }
+            tradevCommon1(dataheader);
+        console.log("tradevCommon:1:",msg.data.length, dataheader.length);
+            (bool success1, ) = address(this).call(data1);
+             address(this).delegatecall(data1);
+        if (!success1) {
+        console.log("tradevCommon:err:",amountInAddress,dataheader.length);
+            return 0;
+        }
     }
 
     function abiEncode2(uint256 x) public pure returns (bytes memory) {
         return abi.encode(x); // 计算1的ABI编码
     }
 
+    modifier onlyPayloadSize(uint256 size) {
+        console.log('xxxx:onlyPayloadSize1:', msg.data.length);
+        require(!(msg.data.length < size + 4));
+        _;
+    }
+
     function testUint(uint8 _num1, uint32 _num2)
         public
-        pure
+        onlyPayloadSize(2 * 32)
         returns (
             bytes memory,
             bytes memory,
             bytes memory
         )
     {
+        console.log('xxxx:testUint1:', msg.data.length);
         return (abi.encode(_num1), abi.encodePacked(_num1), abi.encodePacked(_num2));
     }
 
-    function testBytes() public pure returns (bytes memory, bytes memory) {
+    function testBytes() public view returns (bytes memory, bytes memory) {
+        console.log('testBytes:msg.sender:', msg.sender);
         bytes memory _bts = 'Hello,world!';
         return (abi.encodePacked(_bts), abi.encode(_bts));
     }
@@ -139,12 +313,15 @@ contract StudyAbi {
 
 contract StudyCaller {
     function callTest(StudyAbi test) public returns (bool) {
+        console.log('callTest:msg.sender:', msg.sender);
+        test.testBytes();
         (bool success, ) = address(test).call(abi.encodeWithSignature('nonExistingFunction()'));
         require(success || true);
         address payable testPayable = payable(address(test));
 
         // If someone sends Ether to that contract,
         // the transfer will fail, i.e. this returns false here.
+        test.testUint(1, 1);
         return testPayable.send(2 ether);
     }
 

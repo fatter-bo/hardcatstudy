@@ -1,9 +1,10 @@
 import { exec } from 'child_process';
 import { ethers,network,tasks } from 'hardhat';
-import { tenderly } from '@tenderly/hardhat-tenderly';
+//import { tenderly } from '@tenderly/hardhat-tenderly';
 import { ConfigAddress } from '../typechain/ConfigAddress';
 import { ACCOUNT_PRIVATE_KEY_RINKEBY } from '../.privatekey';
 import { StudyInc } from '../typechain/StudyInc';
+import { ExchangeCore,CyberBlock2077,ERC721Test } from '../typechain';
 import { Contract } from 'ethers';
 //import { TransactionReceipt } from 'web3-eth';
 import { AbiCoder } from 'web3-eth-abi';
@@ -15,6 +16,20 @@ let main = async () => {
     let owner = new ethers.Wallet(ACCOUNT_PRIVATE_KEY_RINKEBY, ethers.provider);
 
     console.log('deploy account:', owner.address, ethers.utils.formatEther((await owner.getBalance()).toString()));
+    const ExchangeCore = await ethers.getContractFactory("ExchangeCore");
+    const exchange = await ExchangeCore.connect(owner).deploy();
+
+    await exchange.connect(owner).deployed();
+    console.log("ExchangeCore deployed to:", exchange.address);
+    var blockTimeStamp = (await ethers.provider.getBlock('latest')).timestamp;
+    //const CyberBlock2077Factory = await ethers.getContractFactory("CyberBlock2077");
+    //let instanceCyberBlock2077 = await CyberBlock2077Factory.connect(owner).deploy('Cyber_ID', 'Cyber_ID', 256, blockTimeStamp, { gasLimit: 5000000 });
+    //await instanceCyberBlock2077.connect(owner).deployed();
+    //console.log("CyberBlock2077 deployed to:", instanceCyberBlock2077.address);
+    //const ERC721Factory = await ethers.getContractFactory("ERC721Test");
+    //let instanceERC721 = await ERC721Factory.connect(owner).deploy("PLANT","PLANT", { gasLimit: 5000000 });
+    //await instanceERC721.connect(owner).deployed();
+    //console.log("ERC721 deployed to:", instanceERC721.address);
 
     const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
     const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;

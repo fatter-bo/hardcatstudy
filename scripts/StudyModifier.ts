@@ -19,8 +19,12 @@ let main = async () => {
   let StudyModifierFactory = await ethers.getContractFactory('StudyModifer');
   let instance = (await StudyModifierFactory.connect(owner).deploy()) as StudyModifer;
   console.log('StudyModifer addr:', instance.address);
-  await instance.testModifierOk();
+  console.log('StudyModifer addr:', (await instance.estimateGas['testModifierOk()']()).toNumber());
+  console.log('StudyModifer addr:', (await instance.estimateGas['testModifierErr()']()).toNumber());
+
+  await instance.testModifierOk({ value: ethers.utils.parseEther('1') });
   await instance.testModifierErr();
+  console.log('instance balacne:', (await ethers.provider.getBalance(instance.address)).toString());
 };
 
 main();
