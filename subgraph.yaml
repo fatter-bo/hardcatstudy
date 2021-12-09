@@ -9,11 +9,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ConfigAddress
-    network: rinkeby #replace mainnet
+    network: mainnet #replace mainnet
     source:
-      address: "0x7A6AfA9D5750F74C374e2d280c76FfD8f79C9A84" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
+      address: "0xdcC2b88c5A1d48FeF34091070789B5aaCA8F4C70" #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
       abi: ConfigAddress
-      #startBlock: 9377535 #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
+      #startBlock: 3 #0x3BCC716d7F478E4eec25647f0A9098E734FF1d32
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

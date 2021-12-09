@@ -26,7 +26,7 @@ let main = async () => {
   console.log('deploy account:', owner.address, ethers.utils.formatEther((await owner.getBalance()).toString()));
 
   const ConfigAddressFactory = await ethers.getContractFactory('ConfigAddress');
-  //const instance = (await ConfigAddressFactory.connect(owner).attach("0x2d748aC95c5b443BA36d73e094221F48ae39c9e2"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
+  //const instance = (await ConfigAddressFactory.connect(owner).attach("0xdcC2b88c5A1d48FeF34091070789B5aaCA8F4C70"))as ConfigAddress;//0x83f238F8a8F557dEdE7aE201434f5FB3bC2dE1F9
   //console.log('ConfigAddress address:', instance.address)
   const instance = (await ConfigAddressFactory.connect(owner).deploy()) as ConfigAddress;
   ReplaceLine(
